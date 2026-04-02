@@ -10,7 +10,9 @@ RUN pip install --no-cache-dir \
     pydantic \
     httpx \
     groq \
-    python-dotenv
+    python-dotenv \
+    fastmcp \
+    websockets
 
 ENV PYTHONPATH=/app
 
