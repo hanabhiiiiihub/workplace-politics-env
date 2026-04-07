@@ -1,0 +1,34 @@
+{
+  "model": "llama-3.1-8b-instant",
+  "env_url": "https://hanabhi-workplace-politics-env.hf.space",
+  "results": [
+    {
+      "task_id": "level_1_easy",
+      "level": 1,
+      "score": 0.459,
+      "total_reward": 0.96,
+      "steps": 12,
+      "success": false,
+      "outcome": "partial"
+    },
+    {
+      "task_id": "level_2_medium",
+      "level": 2,
+      "score": 0.456,
+      "total_reward": 0.93,
+      "steps": 11,
+      "success": false,
+      "outcome": "partial"
+    },
+    {
+      "task_id": "level_3_hard",
+      "level": 3,
+      "score": 0.438,
+      "total_reward": 0.68,
+      "steps": 9,
+      "success": false,
+      "outcome": "partial"
+    }
+  ],
+  "avg_score": 0.451
+}

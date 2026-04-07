@@ -1,5 +1,4 @@
 # inference.py
-# inference.py
 import os
 import json
 import httpx
@@ -121,9 +120,11 @@ def get_llm_action(obs: dict, history: list, step: int) -> dict:
     support = obs.get("known_support", {})
     capital = obs.get("political_capital", 1.0)
 
+    # Force proposal when running out of turns
     if max_t - turn <= 2:
         return {"action_type": "make_proposal", "target": "boss"}
 
+    # Force proposal when coalition is strong enough
     supportive = [k for k, v in support.items() if v == "supportive"]
     if len(supportive) >= 2 and capital > 0.3:
         return {"action_type": "make_proposal", "target": "boss"}
@@ -188,10 +189,11 @@ def run_task(task: dict) -> dict:
             json={"task_level": level}
         ).json()
 
-        total_reward = 0.0
-        history      = []
-        step         = 0
-        obs_text     = ""
+        total_reward  = 0.0
+        history       = []
+        step          = 0
+        obs_text      = ""
+        inline_grade  = None   # grade returned directly in final step response
 
         print(f'[START] task_id="{task_id}" level={level} '
               f'model="{model_tag}" env_url="{ENV_URL}"')
@@ -213,6 +215,10 @@ def run_task(task: dict) -> dict:
 
             reward        = new_obs.get("reward", 0.0)
             total_reward += reward
+
+            # Grab inline grade if episode just ended
+            if new_obs.get("done", False) and "grade" in new_obs:
+                inline_grade = new_obs["grade"]
 
             n_supportive  = sum(
                 1 for v in new_obs.get("known_support", {}).values()
@@ -237,13 +243,23 @@ def run_task(task: dict) -> dict:
             history.append({"obs": obs_text, "action": action})
             obs = new_obs
 
-        try:
-            grade_resp = http.get(
-                f"{ENV_URL}/grade",
-                params={"task_level": level}
-            )
-            score = grade_resp.json().get("score", 0.0)
-        except Exception:
+        # ── Score: prefer inline grade, then /grade endpoint, then fallback ──
+        score = None
+
+        if inline_grade is not None:
+            score = inline_grade
+
+        if score is None:
+            try:
+                grade_resp = http.get(
+                    f"{ENV_URL}/grade",
+                    params={"task_level": level}
+                )
+                score = grade_resp.json().get("score", None)
+            except Exception:
+                pass
+
+        if score is None:
             outcome = obs.get("proposal_outcome")
             if outcome == "approved":
                 score = 1.0

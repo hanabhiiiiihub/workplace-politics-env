@@ -43,7 +43,7 @@ The agent must navigate workplace politics to get a proposal approved.
 ## API Endpoints
 
 - `POST /reset` — start episode
-- `POST /step` — take action  
+- `POST /step` — take action
 - `GET /state` — get full state
 - `GET /grade` — get episode score
 
