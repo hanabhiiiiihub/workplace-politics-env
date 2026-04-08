@@ -4,12 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "workplace-politics-env"
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "workplace-politics-env"
 version = "1.0.0"
 description = "Workplace Politics Simulator - OpenEnv Environment"
 requires-python = ">=3.11"
