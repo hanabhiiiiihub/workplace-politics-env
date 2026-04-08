@@ -2,17 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt .
 
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    pydantic \
-    httpx \
-    groq \
-    python-dotenv \
-    fastmcp \
-    websockets
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 ENV PYTHONPATH=/app
 
