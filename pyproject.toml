@@ -1,5 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "workplace-politics-env"
+version = "1.0.0"
+description = "Workplace Politics Simulator - OpenEnv Environment"
+requires-python = ">=3.11"
 dependencies = [
     "openenv-core>=0.2.0",
+    "openenv>=0.2.0",
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
     "pydantic>=2.0.0",
@@ -10,3 +20,6 @@ dependencies = [
     "websockets>=15.0.0",
     "openai>=1.0.0",
 ]
+
+[project.scripts]
+server = "server.app:app"
